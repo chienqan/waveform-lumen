@@ -10,6 +10,7 @@
         "laravel/lumen-framework": "5.8.*",
         "league/flysystem": "^1.0",
         "mikehaertl/php-shellcommand": "^1.4",
+        "php-ffmpeg/php-ffmpeg": "^0.13.0",
         "vlucas/phpdotenv": "^3.3"
     },
     "require-dev": {
