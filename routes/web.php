@@ -16,3 +16,10 @@ $router->get('/', function () use ($router) {
     $result->message = "not found";
     return response()->json($result);
 });
+
+$router->group(['prefix' => 'transforms'], function () use ($router) {
+    $router->get('/wav2png', 'TransformController@wav2png');
+    $router->get('/primitive', 'TransformController@primitive');
+});
+
+$router->get('/downloads', 'DownloadController@process');
