@@ -12,5 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    $result = new StdClass;
+    $result->message = "not found";
+    return response()->json($result);
 });
