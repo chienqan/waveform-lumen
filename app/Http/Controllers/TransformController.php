@@ -80,19 +80,29 @@ class TransformController extends Controller
         }
 
         // Validate png is exist or not
-        if(!Storage::has('imagick_input.png')) {
+        if(!Storage::has($magickFile)) {
             $this->response->result = 0;
-            $this->response->message = 'Can not find image magick file in local disk';
+            $this->response->message = 'Can not find final file in local disk';
             return response()->json($this->response);
         }
 
         // Put the final result in s3
-        Storage::disk('s3')->put('imagick_input.png', Storage::get('imagick_input.png'));
+        try {
+            Storage::cloud()->put($magickFile, Storage::get($magickFile));
+        } catch (\Exception $exception) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not put final file into s3';
+            $this->response->errorMessage = $exception->getMessage();
+            $this->response->errorTrace = $exception->getTraceAsString();
+        }
+
+        // Finally remove all file in /tmp folder
+        shell_exec('rm -rf /tmp/*');
 
         // Return the png file
         $this->response->result = 1;
-        $this->response->file = 'imagick_input.png';
-        $this->response->message = 'Successfully';
+        $this->response->file = $magickFile;
+        $this->response->link = Storage::cloud()->url($magickFile);
         return response()->json($this->response);
     }
 
