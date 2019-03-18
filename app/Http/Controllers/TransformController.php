@@ -77,10 +77,17 @@ class TransformController extends Controller
 
         // Convert mp3 into wav
         $wavFile = "$fileName-".time().".wav";
-        $ffmpeg = new Command(Binary::path('ffmpeg/ffmpeg'));
-        $ffmpeg->addArg('-i', Storage::path($mp3File));
-        $ffmpeg->addArg(null, Storage::path($wavFile));
+        $mpg123 = new Command(Binary::path('mpg123/mpg123'));
+        $mpg123->addArg('-r', '44100');
+        $mpg123->addArg('-w', Storage::path($wavFile));
+        $mpg123->addArg(null, Storage::path($mp3File));
 
+        // Check mpg123 is execute error or not
+        if(!$mpg123->execute()) {
+            $this->response->result = 0;
+            $this->response->message = 'mpg123 is not working';
+            return response()->json($this->response);
+        }
 
         // Validate wav file is exist or not
         if(!Storage::has($wavFile)) {
