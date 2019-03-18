@@ -23,7 +23,7 @@ provider:
 
 # you can overwrite defaults here
   stage: dev
-  region: us-east-2
+  region: us-west-1
 
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
@@ -58,7 +58,7 @@ functions:
   app:
     handler: bootstrap.php
     layers:
-      - !Sub arn:aws:lambda:us-east-2:379260002300:layer:php71:1
+      - !Sub arn:aws:lambda:us-west-1:379260002300:layer:php71:1
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
