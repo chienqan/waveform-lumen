@@ -101,6 +101,34 @@ class TransformController extends Controller
      */
     public function primitive()
     {
+        // Validate png file is exist or not
+        if(!Storage::has('input.png')) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not find wav file in local disk';
+            return response()->json($this->response);
+        }
 
+        // Convert image into geogramaphic image
+        $primitive = new Command(Binary::path('primitive/primitive'));
+        $primitive->addArg('-m', '8');
+        $primitive->addArg('-n', '30');
+        $primitive->addArg('-i', 'input.png');
+        $primitive->addArg('-o', 'output.svg');
+
+        // Check primitive is working or not
+        if(!$primitive->execute()) {
+            $this->response->result = 0;
+            $this->response->message = 'Primitive is not working';
+            return response()->json($this->response);
+        }
+
+        // Put the final result in s3
+        Storage::cloud()->put('imagick_input.png', Storage::get('input.svg'));
+
+        // Return the svg file
+        $this->response->result = 1;
+        $this->response->file = 'input.svg';
+        $this->response->link = Storage::cloud()->url('input.svg');
+        return response()->json($this->response);
     }
 }
