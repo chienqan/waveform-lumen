@@ -19,7 +19,7 @@ service: waveform-lumen # NOTE: update this with your service name
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: provided
 
 # you can overwrite defaults here
   stage: dev
