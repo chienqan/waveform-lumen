@@ -27,7 +27,7 @@ class TransformController extends Controller
     /**
      * Process audio file into wave image
      * INPUT: audio file
-     * OUTPUT: svg file
+     * OUTPUT: png file
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -155,23 +155,63 @@ class TransformController extends Controller
     }
 
     /**
-     * Process
+     * Process image into geometric image
+     * INPUT: image.png
+     * OUTPUT: image.svg
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function primitive()
+    public function primitive(Request $request)
     {
-        // Validate png file is exist or not
-        if(!Storage::has('input.png')) {
+        // Check file is uploaded or not
+        if(!$request->hasFile('media')) {
             $this->response->result = 0;
-            $this->response->message = 'Can not find wav file in local disk';
+            $this->response->message = 'Uploaded file is required';
+            return response()->json($this->response);
+        }
+
+        // Check file is valid or not
+        if(!$request->file('media')->isValid()) {
+            $this->response->result = 0;
+            $this->response->message = 'Uploaded file is not valid';
+            return response()->json($this->response);
+        }
+
+        // Check extension of the file
+        if(!$request->file('media')->extension() !== 'png') {
+            $this->response->result = 0;
+            $this->response->message = 'Uploaded file must be png file';
+            return response()->json($this->response);
+        }
+
+        $fileName = $request->file('media')->getFilename();
+
+        // Store upload file into local disk
+        $pngFile = "$fileName-".time().".png";
+        try {
+            Storage::put($pngFile, $request->file('media'));
+        } catch (\Exception $exception) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not put uploaded file into server';
+            $this->response->errorMessage = $exception->getMessage();
+            $this->response->errorTrace = $exception->getTraceAsString();
+        }
+
+        // Validate png file is exist or not
+        if(!Storage::has($pngFile)) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not find png file in local disk';
             return response()->json($this->response);
         }
 
         // Convert image into geogramaphic image
+        $svgFile = "$fileName-".time().".svg";
         $primitive = new Command(Binary::path('primitive/primitive'));
         $primitive->addArg('-m', '8');
         $primitive->addArg('-n', '30');
-        $primitive->addArg('-i', 'input.png');
-        $primitive->addArg('-o', 'output.svg');
+        $primitive->addArg('-i', Storage::path($pngFile));
+        $primitive->addArg('-o', Storage::path($svgFile));
 
         // Check primitive is working or not
         if(!$primitive->execute()) {
