@@ -59,20 +59,22 @@ class TransformController extends Controller
         }
 
         // Validate png is exist or not
-        if(!Storage::has('input.png')) {
+        if(!Storage::has($pngFile)) {
             $this->response->result = 0;
             $this->response->message = 'Can not find png file in local disk';
             return response()->json($this->response);
         }
 
         // Drop image and convert to black background
+        $magickFile = "$fileName-".time().".png";
         $imagick = new Command(Binary::path('imagemagick/convert'));
-        $imagick->addArg(null, Storage::path('input.png'));
+        $imagick->addArg(null, Storage::path($pngFile));
         $imagick->addArg('-gravity', 'east');
         $imagick->addArg('-background', 'black');
         $imagick->addArg('-extent', '815x51');
-        $imagick->addArg(null, Storage::path('imagick_input.png'));
+        $imagick->addArg(null, Storage::path($magickFile));
 
+        // Check image magick is execute error or not
         if(!$imagick->execute()) {
             $this->response->result = 0;
             $this->response->message = 'Image magic is not working';
