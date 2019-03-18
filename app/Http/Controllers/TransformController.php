@@ -29,29 +29,75 @@ class TransformController extends Controller
      * INPUT: audio file
      * OUTPUT: svg file
      *
+     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
-     * @throws \ImagickException
      */
-    public function wav2png()
+    public function wav2png(Request $request)
     {
+        // Check file is uploaded or not
+        if(!$request->hasFile('media')) {
+            $this->response->result = 0;
+            $this->response->message = 'Uploaded file is required';
+            return response()->json($this->response);
+        }
+
+        // Check file is valid or not
+        if(!$request->file('media')->isValid()) {
+            $this->response->result = 0;
+            $this->response->message = 'Uploaded file is not valid';
+            return response()->json($this->response);
+        }
+
+        // Check extension of the file
+        if(!$request->file('media')->extension() !== 'mp3') {
+            $this->response->result = 0;
+            $this->response->message = 'Uploaded file must be mp3 file';
+            return response()->json($this->response);
+        }
+
+        $fileName = $request->file('media')->getFilename();
+
         // Store upload file into local disk
-        $inputFile = storage_path('app').'/input.wav';
-        shell_exec("cp $inputFile /tmp/");
+        $mp3File = "$fileName-".time().".mp3";
+        try {
+            Storage::put($mp3File, $request->file('media'));
+        } catch (\Exception $exception) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not put uploaded file into server';
+            $this->response->errorMessage = $exception->getMessage();
+            $this->response->errorTrace = $exception->getTraceAsString();
+        }
+
+        // Valide mp3 file is exist or not
+        if(!Storage::has($mp3File)) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not find mp3 file in local disk';
+            return response()->json($this->response);
+        }
+
+        // Convert mp3 into wav
+        $wavFile = "$fileName-".time().".wav";
+        $ffmpeg = new Command(Binary::path('ffmpeg/ffmpeg'));
+        $ffmpeg->addArg('-i', Storage::path($mp3File));
+        $ffmpeg->addArg(null, Storage::path($wavFile));
+
 
         // Validate wav file is exist or not
-        if(!Storage::has('input.wav')) {
+        if(!Storage::has($wavFile)) {
             $this->response->result = 0;
             $this->response->message = 'Can not find wav file in local disk';
             return response()->json($this->response);
         }
 
         // Convert wav into png
+        $pngFile = "$fileName-".time().".png";
         $wav2png = new Command(Binary::path('wav2png/wav2png'));
         $wav2png->addArg('-w', '800');
         $wav2png->addArg('-h', '51');
-        $wav2png->addArg('-a', Storage::path('input.png'));
-        $wav2png->addArg(null, Storage::path('input.wav'));
+        $wav2png->addArg('-a', Storage::path($pngFile));
+        $wav2png->addArg(null, Storage::path($wavFile));
 
+        // Check wav2png is execute error or not
         if(!$wav2png->execute()) {
             $this->response->result = 0;
             $this->response->message = 'wav2png is not working';
