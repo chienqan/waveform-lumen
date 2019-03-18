@@ -35,32 +35,28 @@ class TransformController extends Controller
     public function wav2png(Request $request)
     {
         // Check file is uploaded or not
-        if(!$request->hasFile('media')) {
+        if(!$request->has('file')) {
             $this->response->result = 0;
-            $this->response->message = 'Uploaded file is required';
+            $this->response->message = 'File is required';
             return response()->json($this->response);
         }
 
-        // Check file is valid or not
-        if(!$request->file('media')->isValid()) {
+        $file = $request->get('file');
+
+        // Check extension is correct or not
+        $extension = strpos($file, ".");
+        if(!$extension) {
             $this->response->result = 0;
-            $this->response->message = 'Uploaded file is not valid';
+            $this->response->message = 'File is not valid';
             return response()->json($this->response);
         }
 
-        // Check extension of the file
-        if(!$request->file('media')->extension() !== 'mp3') {
-            $this->response->result = 0;
-            $this->response->message = 'Uploaded file must be mp3 file';
-            return response()->json($this->response);
-        }
-
-        $fileName = $request->file('media')->getFilename();
+        $fileName = substr($file, 0, $extension);
 
         // Store upload file into local disk
         $mp3File = "$fileName-".time().".mp3";
         try {
-            Storage::put($mp3File, $request->file('media'));
+            Storage::put($mp3File, Storage::cloud()->get($file));
         } catch (\Exception $exception) {
             $this->response->result = 0;
             $this->response->message = 'Can not put uploaded file into server';
@@ -86,6 +82,7 @@ class TransformController extends Controller
         if(!$mpg123->execute()) {
             $this->response->result = 0;
             $this->response->message = 'mpg123 is not working';
+            $this->response->errors = $mpg123->getError();
             return response()->json($this->response);
         }
 
@@ -108,6 +105,7 @@ class TransformController extends Controller
         if(!$wav2png->execute()) {
             $this->response->result = 0;
             $this->response->message = 'wav2png is not working';
+            $this->response->errors = $mpg123->getError();
             return response()->json($this->response);
         }
 
@@ -131,6 +129,7 @@ class TransformController extends Controller
         if(!$imagick->execute()) {
             $this->response->result = 0;
             $this->response->message = 'Image magic is not working';
+            $this->response->errors = $mpg123->getError();
             return response()->json($this->response);
         }
 
@@ -172,27 +171,23 @@ class TransformController extends Controller
     public function primitive(Request $request)
     {
         // Check file is uploaded or not
-        if(!$request->hasFile('media')) {
+        if(!$request->has('file')) {
             $this->response->result = 0;
-            $this->response->message = 'Uploaded file is required';
+            $this->response->message = 'File is required';
             return response()->json($this->response);
         }
 
-        // Check file is valid or not
-        if(!$request->file('media')->isValid()) {
+        $file = $request->get('file');
+
+        // Check extension is correct or not
+        $extension = strpos($file, ".");
+        if(!$extension) {
             $this->response->result = 0;
-            $this->response->message = 'Uploaded file is not valid';
+            $this->response->message = 'File is not valid';
             return response()->json($this->response);
         }
 
-        // Check extension of the file
-        if(!$request->file('media')->extension() !== 'png') {
-            $this->response->result = 0;
-            $this->response->message = 'Uploaded file must be png file';
-            return response()->json($this->response);
-        }
-
-        $fileName = $request->file('media')->getFilename();
+        $fileName = substr($file, 0, $extension);
 
         // Store upload file into local disk
         $pngFile = "$fileName-".time().".png";
