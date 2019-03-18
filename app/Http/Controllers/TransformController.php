@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use mikehaertl\shellcommand\Command;
 use Illuminate\Support\Facades\Storage;
+use App\Facades\Binary;
 
 class TransformController extends Controller
 {
@@ -34,18 +35,8 @@ class TransformController extends Controller
     public function wav2png()
     {
         // Store upload file into local disk
-
-        // Validate mp3 file is exist or not
-        if(!Storage::has('input.mp3')) {
-            $this->response->result = 0;
-            $this->response->message = 'Can not find mp3 file in local disk';
-            return response()->json($this->response);
-        }
-
-        // Convert mp3 into wav
-        $ffmpeg = \FFMpeg\FFMpeg::create();
-        $mp3 = $ffmpeg->open(Storage::path('input.mp3'));
-        $mp3->save(new \FFMpeg\Format\Audio\Wav(), Storage::path('input.wav'));
+        $inputFile = storage_path('app').'/input.wav';
+        shell_exec("cp $inputFile /tmp/");
 
         // Validate wav file is exist or not
         if(!Storage::has('input.wav')) {
@@ -55,15 +46,15 @@ class TransformController extends Controller
         }
 
         // Convert wav into png
-        $command = new Command('python /Users/chien/wav2png/wav2png.py');
-        $command->addArg('-w', '800');
-        $command->addArg('-h', '51');
-        $command->addArg('-a', Storage::path('input.png'));
-        $command->addArg(null, Storage::path('input.wav'));
+        $wav2png = new Command(Binary::path('wav2png/wav2png'));
+        $wav2png->addArg('-w', '800');
+        $wav2png->addArg('-h', '51');
+        $wav2png->addArg('-a', Storage::path('input.png'));
+        $wav2png->addArg(null, Storage::path('input.wav'));
 
-        if(!$command->execute()) {
+        if(!$wav2png->execute()) {
             $this->response->result = 0;
-            $this->response->message = $command->getError();
+            $this->response->message = 'wav2png is not working';
             return response()->json($this->response);
         }
 
@@ -75,13 +66,28 @@ class TransformController extends Controller
         }
 
         // Drop image and convert to black background
-        $image = new \Imagick(Storage::path('input.png'));
-        $image->setImageGravity(\Imagick::GRAVITY_EAST);
-        $image->setImageBackgroundColor('black');
-        $image->extentImage(815, 51, 0, 0);
+        $imagick = new Command(Binary::path('imagemagick/convert'));
+        $imagick->addArg(null, Storage::path('input.png'));
+        $imagick->addArg('-gravity', 'east');
+        $imagick->addArg('-background', 'black');
+        $imagick->addArg('-extent', '815x51');
+        $imagick->addArg(null, Storage::path('imagick_input.png'));
 
-        // Save file when imagick has processed it
-        Storage::put('imagick_input.png', $image);
+        if(!$imagick->execute()) {
+            $this->response->result = 0;
+            $this->response->message = 'Image magic is not working';
+            return response()->json($this->response);
+        }
+
+        // Validate png is exist or not
+        if(!Storage::has('imagick_input.png')) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not find image magick file in local disk';
+            return response()->json($this->response);
+        }
+
+        // Put the final result in s3
+        Storage::disk('s3')->put('imagick_input.png', Storage::get('imagick_input.png'));
 
         // Return the png file
         $this->response->result = 1;
