@@ -221,12 +221,19 @@ class TransformController extends Controller
         }
 
         // Put the final result in s3
-        Storage::cloud()->put('imagick_input.png', Storage::get('input.svg'));
+        try {
+            Storage::cloud()->put($svgFile, Storage::get($svgFile));
+        } catch (\Exception $exception) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not put final file into s3';
+            $this->response->errorMessage = $exception->getMessage();
+            $this->response->errorTrace = $exception->getTraceAsString();
+        }
 
         // Return the svg file
         $this->response->result = 1;
-        $this->response->file = 'input.svg';
-        $this->response->link = Storage::cloud()->url('input.svg');
+        $this->response->file = $svgFile;
+        $this->response->link = Storage::cloud()->url($svgFile);
         return response()->json($this->response);
     }
 }
