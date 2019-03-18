@@ -18,8 +18,8 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'transforms'], function () use ($router) {
-    $router->get('/wav2png', 'TransformController@wav2png');
-    $router->get('/primitive', 'TransformController@primitive');
+    $router->post('/wav2png', 'TransformController@wav2png');
+    $router->post('/primitive', 'TransformController@primitive');
 });
 
 $router->get('/downloads', 'DownloadController@process');
