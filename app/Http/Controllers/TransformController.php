@@ -54,6 +54,7 @@ class TransformController extends Controller
         $partialFile = explode(".", $file);
 
         $fileName = $partialFile[0];
+        $fileName = preg_replace('/\s+/', '', $fileName);
         $fileExtension = $partialFile[1];
 
         if($fileExtension !== 'mp3') {
@@ -227,6 +228,7 @@ class TransformController extends Controller
         $partialFile = explode(".", $file);
 
         $fileName = $partialFile[0];
+        $fileName = preg_replace('/\s+/', '', $fileName);
         $fileExtension = $partialFile[1];
 
         if($fileExtension !== "png") {
@@ -293,7 +295,7 @@ class TransformController extends Controller
         if($request->has('s') && !empty($request->get('s'))) {
             $primitive->addArg('-s', $request->get('s'));
         }
-        
+
         // Check primitive is working or not
         if(!$primitive->execute()) {
             $this->response->result = 0;
