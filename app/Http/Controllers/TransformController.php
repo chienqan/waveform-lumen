@@ -230,6 +230,7 @@ class TransformController extends Controller
         if(!$primitive->execute()) {
             $this->response->result = 0;
             $this->response->message = 'Primitive is not working';
+            $this->response->errors = $primitive->getError();
             return response()->json($this->response);
         }
 
