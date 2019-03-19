@@ -83,14 +83,16 @@ class TransformController extends Controller
         }
 
         // Link mpg123 lib folder
-        $mpg123LibPath = Binary::path('mpg123/lib');
-        $mpg123Lib = new Command("ln -s $mpg123LibPath /tmp");
+        if(!is_link('/tmp/lib')) {
+            $mpg123LibPath = Binary::path('mpg123/lib');
+            $mpg123Lib = new Command("ln -s $mpg123LibPath /tmp");
 
-        if(!$mpg123Lib->execute()) {
-            $this->response->result = 0;
-            $this->response->message = 'Can not create sym link for mpg123 lib';
-            $this->response->errors = $mpg123Lib->getError();
-            return response()->json($this->response);
+            if(!$mpg123Lib->execute()) {
+                $this->response->result = 0;
+                $this->response->message = 'Can not create sym link for mpg123 lib';
+                $this->response->errors = $mpg123Lib->getError();
+                return response()->json($this->response);
+            }
         }
 
         // Convert mp3 into wav
