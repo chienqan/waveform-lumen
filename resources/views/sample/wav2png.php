@@ -160,7 +160,9 @@
         e.preventDefault();
 
         const file = $file[0].files[0];
-        const fileName = $label.text();
+        let fileName = $label.text();
+        fileName = fileName.replace(/ /g, '');
+        fileName = fileName.toLowerCase();
 
         // Show Info Message
         infoMessage('Getting presigned url (1/3)');

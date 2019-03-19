@@ -55,6 +55,7 @@ class TransformController extends Controller
 
         $fileName = $partialFile[0];
         $fileName = preg_replace('/\s+/', '', $fileName);
+        $fileName = strtolower($fileName);
         $fileExtension = $partialFile[1];
 
         if($fileExtension !== 'mp3') {
@@ -229,6 +230,7 @@ class TransformController extends Controller
 
         $fileName = $partialFile[0];
         $fileName = preg_replace('/\s+/', '', $fileName);
+        $fileName = strtolower($fileName);
         $fileExtension = $partialFile[1];
 
         if($fileExtension !== "png") {
