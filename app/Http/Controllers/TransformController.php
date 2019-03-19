@@ -71,8 +71,7 @@ class TransformController extends Controller
         } catch (\Exception $exception) {
             $this->response->result = 0;
             $this->response->message = 'Can not put uploaded file into server';
-            $this->response->errorMessage = $exception->getMessage();
-            $this->response->errorTrace = $exception->getTraceAsString();
+            $this->response->errors = $exception->getMessage();
         }
 
         // Valide mp3 file is exist or not
@@ -157,8 +156,7 @@ class TransformController extends Controller
         } catch (\Exception $exception) {
             $this->response->result = 0;
             $this->response->message = 'Can not put final file into s3';
-            $this->response->errorMessage = $exception->getMessage();
-            $this->response->errorTrace = $exception->getTraceAsString();
+            $this->response->errors = $exception->getMessage();
         }
 
         // Finally remove all file in /tmp folder
@@ -203,12 +201,11 @@ class TransformController extends Controller
         // Store upload file into local disk
         $pngFile = "$fileName-".time().".png";
         try {
-            Storage::put($pngFile, $request->file('media'));
+            Storage::put($pngFile, Storage::cloud()->get($file));
         } catch (\Exception $exception) {
             $this->response->result = 0;
             $this->response->message = 'Can not put uploaded file into server';
-            $this->response->errorMessage = $exception->getMessage();
-            $this->response->errorTrace = $exception->getTraceAsString();
+            $this->response->errors = $exception->getMessage();
         }
 
         // Validate png file is exist or not
@@ -240,8 +237,7 @@ class TransformController extends Controller
         } catch (\Exception $exception) {
             $this->response->result = 0;
             $this->response->message = 'Can not put final file into s3';
-            $this->response->errorMessage = $exception->getMessage();
-            $this->response->errorTrace = $exception->getTraceAsString();
+            $this->response->errors = $exception->getMessage();
         }
 
         // Return the svg file
