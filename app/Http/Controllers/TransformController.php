@@ -70,6 +70,7 @@ class TransformController extends Controller
             $this->response->result = 0;
             $this->response->message = 'Can not put uploaded file into server';
             $this->response->errors = $exception->getMessage();
+            return response()->json($this->response);
         }
 
         // Valide mp3 file is exist or not
@@ -183,6 +184,7 @@ class TransformController extends Controller
             $this->response->result = 0;
             $this->response->message = 'Can not put final file into s3';
             $this->response->errors = $exception->getMessage();
+            return response()->json($this->response);
         }
 
         // Finally remove all file in /tmp folder
@@ -241,6 +243,7 @@ class TransformController extends Controller
             $this->response->result = 0;
             $this->response->message = 'Can not put uploaded file into server';
             $this->response->errors = $exception->getMessage();
+            return response()->json($this->response);
         }
 
         // Validate png file is exist or not
@@ -306,6 +309,7 @@ class TransformController extends Controller
             $this->response->result = 0;
             $this->response->message = 'Can not put final file into s3';
             $this->response->errors = $exception->getMessage();
+            return response()->json($this->response);
         }
 
         // Return the svg file
