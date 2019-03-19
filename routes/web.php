@@ -22,4 +22,10 @@ $router->group(['prefix' => 'transforms'], function () use ($router) {
     $router->post('/primitive', 'TransformController@primitive');
 });
 
+$router->group(['prefix' => 'samples'], function () use ($router) {
+    $router->get('/wav2png', 'SampleController@wav2png');
+    $router->get('/primitive', 'SampleController@primitive');
+});
+
+$router->get('/s3/presigned', 'S3Controller@presigned');
 $router->get('/downloads', 'DownloadController@process');
