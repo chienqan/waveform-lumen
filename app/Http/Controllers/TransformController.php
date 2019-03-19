@@ -43,26 +43,24 @@ class TransformController extends Controller
 
         $file = $request->get('file');
 
-        // Check extension is correct or not
-        $extension = strpos($file, ".");
-        if(!$extension) {
+        // Check file is valid or not
+        $isValidFile = strpos($file, ".");
+        if(!$isValidFile) {
             $this->response->result = 0;
             $this->response->message = 'File is not valid';
             return response()->json($this->response);
         }
 
-        // Link mpg123 lib folder
-        $mpg123LibPath = Binary::path('mpg123/lib');
-        $mpg123Lib = new Command("ln -s $mpg123LibPath /tmp");
+        $partialFile = explode(".", $file);
 
-        if(!$mpg123Lib->execute()) {
+        $fileName = $partialFile[0];
+        $fileExtension = $partialFile[1];
+
+        if($fileExtension !== 'mp3') {
             $this->response->result = 0;
-            $this->response->message = 'Can not create sym link for mpg123 lib';
-            $this->response->errors = $mpg123Lib->getError();
+            $this->response->message = 'Allow only mp3 file';
             return response()->json($this->response);
         }
-
-        $fileName = substr($file, 0, $extension);
 
         // Store upload file into local disk
         $mp3File = "$fileName-".time().".mp3";
@@ -78,6 +76,17 @@ class TransformController extends Controller
         if(!Storage::has($mp3File)) {
             $this->response->result = 0;
             $this->response->message = 'Can not find mp3 file in local disk';
+            return response()->json($this->response);
+        }
+
+        // Link mpg123 lib folder
+        $mpg123LibPath = Binary::path('mpg123/lib');
+        $mpg123Lib = new Command("ln -s $mpg123LibPath /tmp");
+
+        if(!$mpg123Lib->execute()) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not create sym link for mpg123 lib';
+            $this->response->errors = $mpg123Lib->getError();
             return response()->json($this->response);
         }
 
@@ -205,15 +214,24 @@ class TransformController extends Controller
 
         $file = $request->get('file');
 
-        // Check extension is correct or not
-        $extension = strpos($file, ".");
-        if(!$extension) {
+        // Check file is valid or not
+        $isValidFile = strpos($file, ".");
+        if(!$isValidFile) {
             $this->response->result = 0;
             $this->response->message = 'File is not valid';
             return response()->json($this->response);
         }
 
-        $fileName = substr($file, 0, $extension);
+        $partialFile = explode(".", $file);
+
+        $fileName = $partialFile[0];
+        $fileExtension = $partialFile[1];
+
+        if($fileExtension !== "png") {
+            $this->response->result = 1;
+            $this->response->message = 'Allow only png file';
+            return response()->json($this->response);
+        }
 
         // Store upload file into local disk
         $pngFile = "$fileName-".time().".png";
