@@ -41,59 +41,64 @@
     <section class="mt-5">
         <form id="form-upload">
             <div class="form-group row">
-                <label for="alpha" class="col-sm-2 col-form-label">Alpha</label>
-                <div class="col-sm-10">
-                    <input type="text" name="a" class="form-control" id="alpha" placeholder="alpha value (default 128)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="background" class="col-sm-2 col-form-label">Background</label>
-                <div class="col-sm-10">
-                    <input type="text" name="bg" class="form-control" id="background" placeholder="background color (hex)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="shape" class="col-sm-2 col-form-label">Shape</label>
-                <div class="col-sm-10">
-                    <input type="text" name="m" class="form-control" id="shape" placeholder="0=combo 1=triangle 2=rect 3=ellipse 4=circle 5=rotatedrect 6=beziers 7=rotatedellipse 8=polygon (default 8)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="number-of-primitives" class="col-sm-2 col-form-label">Number of primtives</label>
-                <div class="col-sm-10">
-                    <input type="text" name="n" class="form-control" id="number-of-primitives" placeholder="Number of primitives (default 30)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="nth-frame" class="col-sm-2 col-form-label">Nth frame</label>
-                <div class="col-sm-10">
-                    <input type="text" name="nth" class="form-control" id="nth-frame" placeholder="save every Nth frame (put '%d' in path) (default 1)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="resize" class="col-sm-2 col-form-label">Resize</label>
-                <div class="col-sm-10">
-                    <input type="text" name="r" class="form-control" id="resize" placeholder="resize large input images to this size (default 256)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="extra-shape" class="col-sm-2 col-form-label">Extra Shape</label>
-                <div class="col-sm-10">
-                    <input type="text" name="rep" class="form-control" id="extra-shape" placeholder="add N extra shapes per iteration with reduced search">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="image-size" class="col-sm-2 col-form-label">Image Size</label>
-                <div class="col-sm-10">
-                    <input type="text" name="s" class="form-control" id="image-size" placeholder="output image size (default 1024)">
-                </div>
-            </div>
-            <div class="form-group row">
                 <label for="fft-size" class="col-sm-2 col-form-label">File</label>
                 <div class="col-sm-10">
                     <div class="custom-file">
                         <input type="file" name="media" class="custom-file-input" id="customFile">
                         <label class="custom-file-label" for="customFile">Choose file</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <a data-toggle="collapse" data-target="#options" href="javascript:void(0)">Show Options</a>
+            </div>
+            <div id="options" class="collapse">
+                <div class="form-group row">
+                    <label for="alpha" class="col-sm-2 col-form-label">Alpha</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="a" class="form-control" id="alpha" placeholder="alpha value (default 128)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="background" class="col-sm-2 col-form-label">Background</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="bg" class="form-control" id="background" placeholder="background color (hex)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="shape" class="col-sm-2 col-form-label">Shape</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="m" class="form-control" id="shape" placeholder="0=combo 1=triangle 2=rect 3=ellipse 4=circle 5=rotatedrect 6=beziers 7=rotatedellipse 8=polygon (default 8)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="number-of-primitives" class="col-sm-2 col-form-label">Number of primtives</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="n" class="form-control" id="number-of-primitives" placeholder="Number of primitives (default 30)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="nth-frame" class="col-sm-2 col-form-label">Nth frame</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="nth" class="form-control" id="nth-frame" placeholder="save every Nth frame (put '%d' in path) (default 1)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="resize" class="col-sm-2 col-form-label">Resize</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="r" class="form-control" id="resize" placeholder="resize large input images to this size (default 256)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="extra-shape" class="col-sm-2 col-form-label">Extra Shape</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="rep" class="form-control" id="extra-shape" placeholder="add N extra shapes per iteration with reduced search">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="image-size" class="col-sm-2 col-form-label">Image Size</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="s" class="form-control" id="image-size" placeholder="output image size (default 1024)">
                     </div>
                 </div>
             </div>
@@ -204,7 +209,7 @@
         }
 
         // Show Info Message
-        infoMessage('Converting audio file to wave image (3/3)');
+        infoMessage('Converting wave image to geometric image (3/3)');
 
         // send file name to api to process image
         $.ajax({
