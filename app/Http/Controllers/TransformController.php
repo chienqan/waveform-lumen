@@ -111,6 +111,23 @@ class TransformController extends Controller
         $wav2png->addArg('-a', Storage::path($pngFile));
         $wav2png->addArg(null, Storage::path($wavFile));
 
+        // Overwrite default arguments if params is avaliable
+        if($request->has('w')) {
+            $wav2png->addArg('-w', $request->get('w'));
+        }
+
+        if($request->has('h')) {
+            $wav2png->addArg('-h', $request->get('h'));
+        }
+
+        if($request->has('f')) {
+            $wav2png->addArg('-f', $request->get('f'));
+        }
+
+        if($request->has('c')) {
+            $wav2png->addArg('-c', $request->get('c'));
+        }
+
         // Check wav2png is execute error or not
         if(!$wav2png->execute()) {
             $this->response->result = 0;
@@ -222,6 +239,39 @@ class TransformController extends Controller
         $primitive->addArg('-n', '30');
         $primitive->addArg('-i', Storage::path($pngFile));
         $primitive->addArg('-o', Storage::path($svgFile));
+
+        // Overwrite default arguments if params is avaliable
+        if($request->has('a')) {
+            $primitive->addArg('-a', $request->get('a'));
+        }
+
+        if($request->has('bg')) {
+            $primitive->addArg('-bg', $request->get('bg'));
+        }
+
+        if($request->has('m')) {
+            $primitive->addArg('-m', $request->get('m'));
+        }
+
+        if($request->has('n')) {
+            $primitive->addArg('-n', $request->get('n'));
+        }
+
+        if($request->has('nth')) {
+            $primitive->addArg('-nth', $request->get('nth'));
+        }
+
+        if($request->has('r')) {
+            $primitive->addArg('-r', $request->get('r'));
+        }
+
+        if($request->has('rep')) {
+            $primitive->addArg('-rep', $request->get('rep'));
+        }
+
+        if($request->has('s')) {
+            $primitive->addArg('-s', $request->get('s'));
+        }
 
         // Check primitive is working or not
         if(!$primitive->execute()) {
