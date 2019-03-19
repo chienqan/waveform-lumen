@@ -41,35 +41,40 @@
     <section class="mt-5">
         <form id="form-upload">
             <div class="form-group row">
-                <label for="height" class="col-sm-2 col-form-label">Height</label>
-                <div class="col-sm-10">
-                    <input type="text" name="h" class="form-control" id="height" placeholder="image height in pixels (default 51)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="height" class="col-sm-2 col-form-label">Width</label>
-                <div class="col-sm-10">
-                    <input type="text" name="w" class="form-control" id="width" placeholder="image width in pixels (default 800)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="fft-size" class="col-sm-2 col-form-label">FFT Size</label>
-                <div class="col-sm-10">
-                    <input type="text" name="f" class="form-control" id="fft-size" placeholder="fft size, power of 2 for increased performance (default 2048)">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="fft-size" class="col-sm-2 col-form-label">Color Scheme</label>
-                <div class="col-sm-10">
-                    <input type="text" name="c" class="form-control" id="color-scheme" placeholder="name of the color scheme to use (one of: 'Freesound2' (default), 'FreesoundBeastWhoosh', 'Cyberpunk', 'Rainforest')">
-                </div>
-            </div>
-            <div class="form-group row">
                 <label for="fft-size" class="col-sm-2 col-form-label">File</label>
                 <div class="col-sm-10">
                     <div class="custom-file">
                         <input type="file" name="media" class="custom-file-input" id="customFile">
                         <label class="custom-file-label" for="customFile">Choose file</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <a data-toggle="collapse" data-target="#options" href="javascript:void(0)">Show Options</a>
+            </div>
+            <div id="options" class="collapse">
+                <div class="form-group row">
+                    <label for="height" class="col-sm-2 col-form-label">Height</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="h" class="form-control" id="height" placeholder="image height in pixels (default 51)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="height" class="col-sm-2 col-form-label">Width</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="w" class="form-control" id="width" placeholder="image width in pixels (default 800)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="fft-size" class="col-sm-2 col-form-label">FFT Size</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="f" class="form-control" id="fft-size" placeholder="fft size, power of 2 for increased performance (default 2048)">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="fft-size" class="col-sm-2 col-form-label">Color Scheme</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="c" class="form-control" id="color-scheme" placeholder="name of the color scheme to use (one of: 'Freesound2' (default), 'FreesoundBeastWhoosh', 'Cyberpunk', 'Rainforest')">
                     </div>
                 </div>
             </div>
