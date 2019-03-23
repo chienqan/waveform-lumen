@@ -28,6 +28,11 @@ cd waveform-lumen
 composer install
 ````
 
+Generate app key
+````
+php artisan key:generate
+````
+
 ## Getting Started
 
 ### Create an Policy:
