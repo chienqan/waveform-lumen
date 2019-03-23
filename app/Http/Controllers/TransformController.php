@@ -150,7 +150,76 @@ class TransformController extends Controller
             return response()->json($this->response);
         }
 
-        // Validate png is exist or not
+        // Put the final result in s3
+        try {
+            Storage::cloud()->put($pngFile, Storage::get($pngFile));
+        } catch (\Exception $exception) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not put final file into s3';
+            $this->response->errors = $exception->getMessage();
+            return response()->json($this->response);
+        }
+
+        // Return the png file
+        $this->response->result = 1;
+        $this->response->file = $pngFile;
+        $this->response->link = Storage::cloud()->url($pngFile);
+        return response()->json($this->response);
+    }
+
+    /**
+     * Process png file using image magick
+     * INPUT: png file
+     * OUTPUT: png file
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function imagemagick(Request $request)
+    {
+        // Check file is uploaded or not
+        if(!$request->has('file')) {
+            $this->response->result = 0;
+            $this->response->message = 'File is required';
+            return response()->json($this->response);
+        }
+
+        $file = $request->get('file');
+
+        // Check file is valid or not
+        $isValidFile = strpos($file, ".");
+        if(!$isValidFile) {
+            $this->response->result = 0;
+            $this->response->message = 'File is not valid';
+            return response()->json($this->response);
+        }
+
+        $partialFile = explode(".", $file);
+
+        $fileName = $partialFile[0];
+        $fileName = preg_replace('/\s+/', '', $fileName);
+        $fileName = strtolower($fileName);
+        $fileExtension = $partialFile[1];
+
+        if($fileExtension !== 'png') {
+            $this->response->result = 0;
+            $this->response->message = 'Allow only png file';
+            return response()->json($this->response);
+        }
+
+
+        // Store upload file into local disk
+        $pngFile = "$fileName-".time().".png";
+        try {
+            Storage::put($pngFile, Storage::cloud()->get($file));
+        } catch (\Exception $exception) {
+            $this->response->result = 0;
+            $this->response->message = 'Can not put uploaded file into server';
+            $this->response->errors = $exception->getMessage();
+            return response()->json($this->response);
+        }
+
+        // Validate png file is exist or not
         if(!Storage::has($pngFile)) {
             $this->response->result = 0;
             $this->response->message = 'Can not find png file in local disk';
@@ -174,13 +243,6 @@ class TransformController extends Controller
             return response()->json($this->response);
         }
 
-        // Validate png is exist or not
-        if(!Storage::has($magickFile)) {
-            $this->response->result = 0;
-            $this->response->message = 'Can not find final file in local disk';
-            return response()->json($this->response);
-        }
-
         // Put the final result in s3
         try {
             Storage::cloud()->put($magickFile, Storage::get($magickFile));
@@ -191,10 +253,7 @@ class TransformController extends Controller
             return response()->json($this->response);
         }
 
-        // Finally remove all file in /tmp folder
-        shell_exec('rm -rf /tmp/*');
-
-        // Return the png file
+        // Return the svg file
         $this->response->result = 1;
         $this->response->file = $magickFile;
         $this->response->link = Storage::cloud()->url($magickFile);
