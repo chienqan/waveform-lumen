@@ -273,7 +273,7 @@ class TransformController extends Controller
             return response()->json($this->response);
         }
 
-        // Return the svg file
+        // Return the png file
         $this->response->result = 1;
         $this->response->file = $magickFile;
         $this->response->link = Storage::cloud()->url($magickFile);
