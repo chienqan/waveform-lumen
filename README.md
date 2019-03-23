@@ -22,6 +22,12 @@ Clone repository include submodules
 git clone --recurse-submodules -j8 git://github.com/quangchien/waveform-lumen
 ````
 
+Install app dependencies
+````
+cd waveform-lumen
+composer install
+````
+
 ## Getting Started
 
 ### Create an Policy:
