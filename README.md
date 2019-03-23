@@ -17,6 +17,11 @@ Install aws-cli
 https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 ````
 
+Clone repository include submodules
+````
+git clone --recurse-submodules -j8 git://github.com/quangchien/waveform-lumen
+````
+
 ## Getting Started
 
 ### Create an Policy:
