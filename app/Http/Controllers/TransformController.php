@@ -83,7 +83,7 @@ class TransformController extends Controller
         }
 
         // Link mpg123 lib folder
-        if(!is_link('/tmp/lib')) {
+        if(!is_link('/tmp/lib') && app()->environment() === 'dev') {
             $mpg123LibPath = Binary::path('mpg123/lib');
             $mpg123Lib = new Command("ln -s $mpg123LibPath /tmp");
 
@@ -95,9 +95,17 @@ class TransformController extends Controller
             }
         }
 
+
         // Convert mp3 into wav
         $wavFile = "$fileName-".time().".wav";
+
         $mpg123 = new Command(Binary::path('mpg123/mpg123'));
+
+        // Using external binary for local environment
+        if(app()->environment() === 'local') {
+            $mpg123 = new Command('mpg123');
+        }
+
         $mpg123->addArg('-r', '44100');
         $mpg123->addArg('-w', Storage::path($wavFile));
         $mpg123->addArg(null, Storage::path($mp3File));
@@ -119,7 +127,14 @@ class TransformController extends Controller
 
         // Convert wav into png
         $pngFile = "$fileName-".time().".png";
+
         $wav2png = new Command(Binary::path('wav2png/wav2png'));
+
+        // Using external binary for local environment
+        if(app()->environment() === 'local') {
+            $wav2png = new Command('python $HOME/wav2png/wav2png.py');
+        }
+
         $wav2png->addArg('-w', '800');
         $wav2png->addArg('-h', '51');
         $wav2png->addArg('-a', Storage::path($pngFile));
@@ -207,7 +222,6 @@ class TransformController extends Controller
             return response()->json($this->response);
         }
 
-
         // Store upload file into local disk
         $pngFile = "$fileName-".time().".png";
         try {
@@ -228,7 +242,14 @@ class TransformController extends Controller
 
         // Drop image and convert to black background
         $magickFile = "$fileName-".time().".png";
+
         $imagick = new Command(Binary::path('imagemagick/convert'));
+
+        // Using external binary for local environment
+        if(app()->environment() === 'local') {
+            $imagick = new Command('convert');
+        }
+
         $imagick->addArg(null, Storage::path($pngFile));
         $imagick->addArg('-gravity', 'east');
         $imagick->addArg('-background', 'black');
@@ -320,7 +341,14 @@ class TransformController extends Controller
 
         // Convert image into geogramaphic image
         $svgFile = "$fileName-".time().".svg";
+
         $primitive = new Command(Binary::path('primitive/primitive'));
+
+        // Using external binary for local environment
+        if(app()->environment() === 'local') {
+            $primitive = new Command('primitive');
+        }
+
         $primitive->addArg('-m', '8');
         $primitive->addArg('-n', '30');
         $primitive->addArg('-i', Storage::path($pngFile));
