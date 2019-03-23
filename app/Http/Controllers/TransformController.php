@@ -181,7 +181,7 @@ class TransformController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function imagemagick(Request $request)
+    public function imagick(Request $request)
     {
         // Check file is uploaded or not
         if(!$request->has('file')) {
@@ -254,7 +254,7 @@ class TransformController extends Controller
                 $imagick->addArg("-$param", $request->get($param));
             }
         }
-
+        
         // Check image magick is execute error or not
         if(!$imagick->execute()) {
             $this->response->result = 0;
