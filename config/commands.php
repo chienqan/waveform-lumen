@@ -8,7 +8,7 @@ return [
         'c',
     ],
 
-    'imagemagick' => [
+    'imagick' => [
         'adjoin',
         'affine',
         'alpha',
