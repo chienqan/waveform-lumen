@@ -19,6 +19,7 @@ $router->get('/', function () use ($router) {
 
 $router->group(['prefix' => 'transforms'], function () use ($router) {
     $router->post('/wav2png', 'TransformController@wav2png');
+    $router->post('/imagick', 'TransformController@imagick');
     $router->post('/primitive', 'TransformController@primitive');
 });
 
