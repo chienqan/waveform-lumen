@@ -141,20 +141,11 @@ class TransformController extends Controller
         $wav2png->addArg(null, Storage::path($wavFile));
 
         // Overwrite default arguments if params is avaliable
-        if($request->has('w') && !empty($request->get('w'))) {
-            $wav2png->addArg('-w', $request->get('w'));
-        }
-
-        if($request->has('h') && !empty($request->get('h'))) {
-            $wav2png->addArg('-h', $request->get('h'));
-        }
-
-        if($request->has('f') && !empty($request->get('f'))) {
-            $wav2png->addArg('-f', $request->get('f'));
-        }
-
-        if($request->has('c') && !empty($request->get('c'))) {
-            $wav2png->addArg('-c', $request->get('c'));
+        $params = config('commands.wav2png');
+        foreach ($params as $param) {
+            if($request->has($param) && !empty($request->get($param))) {
+                $wav2png->addArg("-$param", $request->get($param));
+            }
         }
 
         // Check wav2png is execute error or not
@@ -260,7 +251,7 @@ class TransformController extends Controller
         if(!$imagick->execute()) {
             $this->response->result = 0;
             $this->response->message = 'Image magic is not working';
-            $this->response->errors = $mpg123->getError();
+            $this->response->errors = $imagick->getError();
             return response()->json($this->response);
         }
 
@@ -355,36 +346,11 @@ class TransformController extends Controller
         $primitive->addArg('-o', Storage::path($svgFile));
 
         // Overwrite default arguments if params is avaliable
-        if($request->has('a') && !empty($request->get('a'))) {
-            $primitive->addArg('-a', $request->get('a'));
-        }
-
-        if($request->has('bg') && !empty($request->get('bg'))) {
-            $primitive->addArg('-bg', $request->get('bg'));
-        }
-
-        if($request->has('m') && !empty($request->get('m'))) {
-            $primitive->addArg('-m', $request->get('m'));
-        }
-
-        if($request->has('n') && !empty($request->get('n'))) {
-            $primitive->addArg('-n', $request->get('n'));
-        }
-
-        if($request->has('nth') && !empty($request->get('nth'))) {
-            $primitive->addArg('-nth', $request->get('nth'));
-        }
-
-        if($request->has('r') && !empty($request->get('r'))) {
-            $primitive->addArg('-r', $request->get('r'));
-        }
-
-        if($request->has('rep') && !empty($request->get('rep'))) {
-            $primitive->addArg('-rep', $request->get('rep'));
-        }
-
-        if($request->has('s') && !empty($request->get('s'))) {
-            $primitive->addArg('-s', $request->get('s'));
+        $params = config('commands.primitive');
+        foreach ($params as $param) {
+            if($request->has($param) && !empty($request->get($param))) {
+                $primitive->addArg("-$param", $request->get($param));
+            }
         }
 
         // Check primitive is working or not
