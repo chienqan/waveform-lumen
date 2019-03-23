@@ -247,6 +247,14 @@ class TransformController extends Controller
         $imagick->addArg('-extent', '815x51');
         $imagick->addArg(null, Storage::path($magickFile));
 
+        // Overwrite default arguments if params is avaliable
+        $params = config('commands.imagick');
+        foreach ($params as $param) {
+            if($request->has($param) && !empty($request->get($param))) {
+                $imagick->addArg("-$param", $request->get($param));
+            }
+        }
+
         // Check image magick is execute error or not
         if(!$imagick->execute()) {
             $this->response->result = 0;
