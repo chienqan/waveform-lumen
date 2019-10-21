@@ -27,10 +27,18 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/dev/samples/wav2png">Wav2png</a>
+                    <?php if(app()->environment() === 'local'): ?>
+                        <a class="nav-link" href="/samples/wav2png">Wav2png</a>
+                    <?php else: ?>
+                        <a class="nav-link" href="/dev/samples/wav2png">Wav2png</a>
+                    <?php endif; ?>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/dev/samples/primitive">Primitive</a>
+                    <?php if(app()->environment() === 'local'): ?>
+                        <a class="nav-link" href="/samples/primitive">Primitive</a>
+                    <?php else: ?>
+                        <a class="nav-link" href="/dev/samples/primitive">Primitive</a>
+                    <?php endif; ?>
                 </li>
             </ul>
         </div>

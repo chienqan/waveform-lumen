@@ -243,7 +243,7 @@ class TransformController extends Controller
 
         $imagick->addArg(null, Storage::path($pngFile));
         $imagick->addArg('-gravity', 'east');
-        $imagick->addArg('-background', 'black');
+        $imagick->addArg('-transparent', 'black');
         $imagick->addArg('-extent', '815x51');
         $imagick->addArg(null, Storage::path($magickFile));
 
