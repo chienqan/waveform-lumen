@@ -17,6 +17,16 @@ class SampleController extends Controller
     }
 
     /**
+     * Show demo how to use imagick
+     *
+     * @return \Illuminate\View\View
+     */
+    public function imagick()
+    {
+        return view('sample/imagick');
+    }
+
+    /**
      * Show demo how to use primitive
      *
      * @return \Illuminate\View\View

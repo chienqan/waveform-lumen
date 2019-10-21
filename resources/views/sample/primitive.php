@@ -33,6 +33,13 @@
                         <a class="nav-link" href="/dev/samples/wav2png">Wav2png</a>
                     <?php endif; ?>
                 </li>
+                <li class="nav-item">
+                    <?php if(app()->environment() === 'local'): ?>
+                        <a class="nav-link" href="/samples/imagick">Imagick</a>
+                    <?php else: ?>
+                        <a class="nav-link" href="/dev/samples/imagick">Imagick</a>
+                    <?php endif; ?>
+                </li>
                 <li class="nav-item active">
                     <?php if(app()->environment() === 'local'): ?>
                         <a class="nav-link" href="/samples/primitive">Primitive</a>
@@ -140,7 +147,10 @@
 
     const base = () => {
         const href = window.location.href;
-        const url = href.replace('/samples/wav2png', '').replace('/samples/primitive', '');
+        const url = href
+            .replace('/samples/wav2png', '')
+            .replace('/samples/primitive', '')
+            .replace('/samples/imagick', '');
         return url;
     };
 
