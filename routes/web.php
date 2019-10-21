@@ -25,6 +25,7 @@ $router->group(['prefix' => 'transforms'], function () use ($router) {
 
 $router->group(['prefix' => 'samples'], function () use ($router) {
     $router->get('/wav2png', 'SampleController@wav2png');
+    $router->get('/imagick', 'SampleController@imagick');
     $router->get('/primitive', 'SampleController@primitive');
 });
 
