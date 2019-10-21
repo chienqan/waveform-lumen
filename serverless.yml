@@ -58,7 +58,7 @@ functions:
   app:
     handler: bootstrap.php
     layers:
-      - !Sub arn:aws:lambda:us-west-1:379260002300:layer:php71:1
+      - !Sub arn:aws:lambda:us-west-2:663823542980:layer:php71:1
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
