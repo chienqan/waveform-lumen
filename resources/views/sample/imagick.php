@@ -69,21 +69,27 @@
                     </div>
                     <div id="options" class="collapse">
                         <div class="form-group row">
+                            <label for="alpha" class="col-sm-2 col-form-label">Background</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="a" class="form-control" id="background" placeholder="background value (default black)">
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label for="alpha" class="col-sm-2 col-form-label">Gravity</label>
                             <div class="col-sm-10">
                                 <input type="text" name="a" class="form-control" id="gravity" placeholder="gravity value (default east)">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="background" class="col-sm-2 col-form-label">Transparent</label>
-                            <div class="col-sm-10">
-                                <input type="text" name="bg" class="form-control" id="transparent" placeholder="replace background color to transparent color (default black)">
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="shape" class="col-sm-2 col-form-label">Extent</label>
                             <div class="col-sm-10">
                                 <input type="text" name="m" class="form-control" id="shape" placeholder="set the image size (default 815x51)">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="background" class="col-sm-2 col-form-label">Transparent</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="bg" class="form-control" id="transparent" placeholder="replace background color to transparent color (default black)">
                             </div>
                         </div>
                     </div>
@@ -207,6 +213,7 @@
                     method: 'POST',
                     data: {
                         file: fileName,
+                        background: $('#background').val(),
                         gravity: $('#gravity').val(),
                         transparent: $('#transparent').val(),
                         extent: $('#extent').val(),

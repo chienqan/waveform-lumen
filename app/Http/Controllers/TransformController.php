@@ -242,9 +242,10 @@ class TransformController extends Controller
         }
 
         $imagick->addArg(null, Storage::path($pngFile));
+        $imagick->addArg('-background', 'black');
         $imagick->addArg('-gravity', 'east');
-        $imagick->addArg('-transparent', 'black');
         $imagick->addArg('-extent', '815x51');
+        $imagick->addArg('-transparent', 'black');
         $imagick->addArg(null, Storage::path($magickFile));
 
         // Overwrite default arguments if params is avaliable
@@ -254,7 +255,7 @@ class TransformController extends Controller
                 $imagick->addArg("-$param", $request->get($param));
             }
         }
-        
+
         // Check image magick is execute error or not
         if(!$imagick->execute()) {
             $this->response->result = 0;
@@ -350,6 +351,7 @@ class TransformController extends Controller
 
         $primitive->addArg('-m', '8');
         $primitive->addArg('-n', '30');
+        $primitive->addArg('-bg', '#ffffff00');
         $primitive->addArg('-i', Storage::path($pngFile));
         $primitive->addArg('-o', Storage::path($svgFile));
 
