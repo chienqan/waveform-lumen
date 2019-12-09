@@ -373,9 +373,7 @@ class TransformController extends Controller
 
         // Convert white to transparent background for svg
         $svg = Storage::get($svgFile);
-        $svg = file_get_contents($svg);
-        $svg = str_replace("fill=\"#ffffff\"", "fill=\"none\"", $svg);
-        Storage::put($svgFile, $svg);
+        Storage::put($svgFile, str_replace("fill=\"#ffffff\"", "fill=\"none\"", $svg));
 
         // Put the final result in s3
         try {
